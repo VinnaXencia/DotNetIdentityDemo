@@ -2,13 +2,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DotNetBrushUp.Data;
 using DotNetBrushUp.Areas.Identity.Data;
+using System.Configuration;
+using DotNetBrushUp.DataModels;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DotNetBrushUpDbContextConnection") ?? throw new InvalidOperationException("Connection string 'DotNetBrushUpDbContextConnection' not found.");
 
-builder.Services.AddDbContext<DotNetBrushUpDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<DotNetBrushUpDbContext>(options => 
+    options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DotNetBrushUpDbContext>();
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+    options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DotNetBrushUpDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

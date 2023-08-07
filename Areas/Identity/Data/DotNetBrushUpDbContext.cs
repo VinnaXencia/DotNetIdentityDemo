@@ -1,4 +1,5 @@
 ﻿using DotNetBrushUp.Areas.Identity.Data;
+using DotNetBrushUp.DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +8,15 @@ namespace DotNetBrushUp.Data;
 
 public class DotNetBrushUpDbContext : IdentityDbContext<ApplicationUser>
 {
+    public DotNetBrushUpDbContext()
+    {
+    }
+
     public DotNetBrushUpDbContext(DbContextOptions<DotNetBrushUpDbContext> options)
         : base(options)
     {
     }
-
+    public DbSet<EmployeeDetail> EmployeeDetails { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
