@@ -17,41 +17,41 @@
 
 <h1>Enter Employee Detail</h1>
 
-<h4>EmployeeDetail</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddEmployeeDetail">
+    <div class="col-md-6">
+        <form asp-action="AddEmployeeDetail" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="EmployeeId" class="control-label"></label>
+                <label asp-for="EmployeeId" class="control-label">Employee ID</label>
                 <input asp-for="EmployeeId" class="form-control" />
                 <span asp-validation-for="EmployeeId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="EmployeeName" class="control-label"></label>
+                <label asp-for="EmployeeName" class="control-label">Employee Name</label>
                 <input asp-for="EmployeeName" class="form-control" />
                 <span asp-validation-for="EmployeeName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="EmployeeLocation" class="control-label"></label>
+                <label asp-for="EmployeeLocation" class="control-label">Employee Location</label>
                 <input asp-for="EmployeeLocation" class="form-control" />
                 <span asp-validation-for="EmployeeLocation" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="EmployeePhoneNo" class="control-label"></label>
+                <label asp-for="EmployeePhoneNo" class="control-label">Employee Phone No</label>
                 <input asp-for="EmployeePhoneNo" class="form-control" />
                 <span asp-validation-for="EmployeePhoneNo" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
@@ -59,3 +59,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
