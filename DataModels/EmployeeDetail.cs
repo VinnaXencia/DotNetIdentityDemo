@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotNetBrushUp.DataModels
 {
@@ -9,5 +11,10 @@ namespace DotNetBrushUp.DataModels
         public string EmployeeName { get; set; }
         public string EmployeeLocation { get; set; }
         public string EmployeePhoneNo { get; set; }
+        public string EmployeeProofFilePath { get; set; }
+        public string EmployeeProofFileName { get; set; }
+
+        [NotMapped]
+        public IFormFile EmployeeProofFile { get; set; }
     }
 }
