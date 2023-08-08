@@ -4,6 +4,7 @@ using DotNetBrushUp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetBrushUp.Migrations
 {
     [DbContext(typeof(DotNetBrushUpDbContext))]
-    partial class DotNetBrushUpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230808101444_Added Nullable for properties")]
+    partial class AddedNullableforproperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -19,9 +19,9 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="AddEmployeeDetail" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <form asp-action="AddEmployeeDetail" asp-controller="Employee" method="post" enctype="multipart/form-data">
+            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            <div class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="EmployeeId" class="control-label">Employee ID</label>
                 <input asp-for="EmployeeId" class="form-control" />
@@ -44,6 +44,11 @@
                 <label asp-for="EmployeePhoneNo" class="control-label">Employee Phone No</label>
                 <input asp-for="EmployeePhoneNo" class="form-control" />
                 <span asp-validation-for="EmployeePhoneNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeProofFile" class="control-label"></label>
+                <input asp-for="EmployeeProofFile" name="EmployeeProofFile" type="file" class="form-control" />
+                <span asp-validation-for="EmployeeProofFile" class="text-danger"></span>
             </div>
 
             <div class="form-group">

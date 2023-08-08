@@ -5,9 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>AddEmployeeDetail</h1>
+<h1>Add Employee Detail</h1>
 
-<h4>EmployeeDetail</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,6 +33,12 @@
                 <span asp-validation-for="EmployeePhoneNo" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="EmployeeProofFile" class="control-label"></label>
+                <input asp-for="EmployeeProofFile" type="file" class="form-control" />
+                <span asp-validation-for="EmployeeProofFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -45,5 +50,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

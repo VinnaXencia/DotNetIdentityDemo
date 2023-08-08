@@ -3,6 +3,7 @@ using DotNetBrushUp.Data;
 using DotNetBrushUp.DataModels;
 using DotNetBrushUp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,30 +18,22 @@ namespace DotNetBrushUp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly DotNetBrushUpDbContext _dbContext;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger,UserManager<ApplicationUser> userManager, DotNetBrushUpDbContext dbContext)
+        public HomeController(ILogger<HomeController> logger,UserManager<ApplicationUser> userManager, 
+            DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             this._userManager = userManager;
             _dbContext = dbContext;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
             ViewData["UserID"] = _userManager.GetUserId(this.User);
-            return View();
+            return View();            
         }
-        public IActionResult AddEmployeeDetail(EmployeeDetail employeeDetail)
-        {
-            if (ModelState.IsValid)
-            {
-                _dbContext.EmployeeDetails.Add(employeeDetail);
-                _dbContext.SaveChanges();
-                return RedirectToAction("Index"); // Redirect to a success page or list of employees
-            }
-            return View("Index", employeeDetail);
-        }
-
 
         public IActionResult Privacy()
         {
