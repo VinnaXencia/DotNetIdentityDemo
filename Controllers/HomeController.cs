@@ -12,7 +12,7 @@ using System.Net;
 
 namespace DotNetBrushUp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

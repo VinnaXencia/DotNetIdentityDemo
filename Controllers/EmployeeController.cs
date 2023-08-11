@@ -15,7 +15,9 @@ using System.Threading.Tasks;
 
 namespace DotNetBrushUp.Controllers
 {
-    [Authorize]
+    //[Authorize(Roles = "Admin")]
+    [ApiController]
+    [Route("api/[controller]")]
     public class EmployeeController : Controller
     {
         private readonly ILogger<EmployeeController> _logger;
@@ -65,6 +67,22 @@ namespace DotNetBrushUp.Controllers
             //return View(employeeDetail);
             return RedirectToAction("Index", "Home", employeeDetail);
         }
+
+        [HttpGet]
+        [Route("GetEmployee/{id}")]
+        public IActionResult GetEmployee(string empId)
+        {
+            
+            var employee = _dbContext.EmployeeDetails.FirstOrDefault(e => e.EmployeeId == empId);
+
+            if (employee == null)
+            {
+                return NotFound(); // Return 404 if employee is not found
+            }
+
+            return Ok(employee); // Return the employee details
+        }
+
 
     }
 }
