@@ -1,0 +1,60 @@
+﻿@model DotNetBrushUp.DataModels.ContactDataModel
+
+
+<div class="container1">
+    @{
+        ViewData["Title"] = "Edit";
+    }
+
+    <h1 class="heading">Edit Contact</h1>
+    <div class="row">
+        <div class="col-md-4">
+            @*<form asp-action="Edit">*@
+            <form asp-action="UpdateContact">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ContactId" />
+                <div class="form-group" style="margin-top:10px">
+                    <label asp-for="ContactName" class="control-label"><b>Contact Name</b></label>
+                    <input asp-for="ContactName" class="form-control" />
+                    <span asp-validation-for="ContactName" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="margin-top:10px">
+                    <label asp-for="ContactEmail" class="control-label"><b>Contact Email</b></label>
+                    <input asp-for="ContactEmail" class="form-control" />
+                    <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="margin-top:10px">
+                    <label asp-for="ContactAddress" class="control-label"><b>Contact Address</b></label>
+                    <input asp-for="ContactAddress" class="form-control" />
+                    <span asp-validation-for="ContactAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="margin-top:10px">
+                    <label asp-for="ContactPhoneNo" class="control-label"><b>Contact PhoneNo</b></label>
+                    <input asp-for="ContactPhoneNo" class="form-control" />
+                    <span asp-validation-for="ContactPhoneNo" class="text-danger"></span>
+                </div>
+                @*<div class="form-group">
+                <label asp-for="ContactProofFileName" class="control-label"></label>
+                <input asp-for="ContactProofFileName" class="form-control" />
+                <span asp-validation-for="ContactProofFileName" class="text-danger"></span>
+                </div>*@
+                <div class="form-group" style="margin-top:10px">
+                    <input type="submit" id="btn-update" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+

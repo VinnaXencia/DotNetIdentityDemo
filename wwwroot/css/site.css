@@ -45,3 +45,49 @@ body {
 .login-logout-card .card-body {
     padding: 10px 20px;
 }
+
+.btn.btn1{
+    background-color:blue;
+    color:white;
+    font-weight:bold;
+    font-style:oblique;
+}
+
+    .btn.btn1:hover {
+        background-color: deepskyblue;
+    }
+
+tbody{
+    background: url(https://st2.depositphotos.com/3922387/8342/i/450/depositphotos_83428804-stock-photo-abstract-pastel-sky-blurred-background.jpg);
+    background-size: cover;
+    width:max-content;
+  
+}
+
+thead{
+    background-color:black;
+    color:white;
+}
+
+.heading{
+  
+    text-decoration:underline;
+    color:brown;
+    font-weight:bold;
+    font-style:normal;
+}
+
+th,tr{
+    text-align:center;
+}
+
+center{
+    margin-left:300px;
+}
+
+.container1 {
+    
+    justify-content: center;
+    align-items: center;
+    margin-left:500px;
+}

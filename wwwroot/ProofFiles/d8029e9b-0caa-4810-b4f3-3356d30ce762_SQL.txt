@@ -1,0 +1,90 @@
+Connection String:t
+
+Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
+
+
+C:\Program Files\Microsoft SQL Server\160\Setup Bootstrap\Log\20230808_133722
+
+
+C:\SQL2022\Express_ENU
+
+
+C:\Program Files\Microsoft SQL Server\160\SSEI\Resources
+
+token based authentication - web api
+how to get and upload a file in Azure blob storage
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using DotNetBrushUp.Data;
+using DotNetBrushUp.Areas.Identity.Data;
+using System.Configuration;
+using DotNetBrushUp.DataModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DotNetBrushUpDbContextConnection") ?? throw new InvalidOperationException("Connection string 'DotNetBrushUpDbContextConnection' not found.");
+
+builder.Services.AddDbContext<DotNetBrushUpDbContext>(options => 
+    options.UseSqlServer(connectionString));
+
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+    options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DotNetBrushUpDbContext>();
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireUppercase = false;
+});
+
+
+var app = builder.Build();
+
+// Configure JWT authentication
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAuthentication(); // Add this line for authentication
+app.UseAuthorization();
+
+var tokenKey = Encoding.UTF8.GetBytes("secretkey"); // Replace with your actual secret key
+app.UseAuthentication(); // Use authentication
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
+
+app.Run();
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

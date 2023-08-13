@@ -37,6 +37,12 @@ namespace DotNetBrushUp.Controllers
             return View();
         }
 
+        [Route("GetEmployee")]
+        public IActionResult GetEmployee()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddEmployeeDetail(EmployeeDetail employeeDetail)
         {
@@ -69,8 +75,8 @@ namespace DotNetBrushUp.Controllers
         }
 
         [HttpGet]
-        [Route("GetEmployee/{id}")]
-        public IActionResult GetEmployee(string empId)
+        [Route("GetEmployeeDetail/{empId}")]
+        public IActionResult GetEmployeeDetail(string empId)
         {
             
             var employee = _dbContext.EmployeeDetails.FirstOrDefault(e => e.EmployeeId == empId);

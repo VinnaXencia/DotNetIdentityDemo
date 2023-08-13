@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DotNetBrushUp.DataModels.ContactDataModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Contacts</h1><hr />
+
+<p>
+    <a asp-action="Create" class="btn btn1">Create New Contact</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactPhoneNo)
+            </th>
+                <th>
+                    Actions
+                </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.ContactProofFilePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactProofFileName)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPhoneNo)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.ContactProofFilePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactProofFileName)
+            </td>*@
+                    <td style="text-align:center">
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ContactId">Edit</a> |
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ContactId">Details</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+    
+</table>
+

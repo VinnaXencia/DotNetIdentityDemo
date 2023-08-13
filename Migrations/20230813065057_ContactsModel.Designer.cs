@@ -4,6 +4,7 @@ using DotNetBrushUp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetBrushUp.Migrations
 {
     [DbContext(typeof(DotNetBrushUpDbContext))]
-    partial class DotNetBrushUpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230813065057_ContactsModel")]
+    partial class ContactsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +123,11 @@ namespace DotNetBrushUp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactProofFileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactProofFilePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactId");
