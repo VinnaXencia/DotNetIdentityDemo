@@ -1,42 +1,38 @@
 ﻿using DotNetBrushUp.Areas.Identity.Data;
 using DotNetBrushUp.Data;
+using DotNetBrushUp.DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DotNetBrushUp.DataModels;
-using DotNetBrushUp.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.SqlServer.Server;
 
 namespace DotNetBrushUp.Controllers
 {
     //[ApiController]
     //[Route("api/[controller]")]
-    //[Route("Contacts")]
+    [Authorize]
     public class ContactsController : Controller
     {
         private readonly ILogger<ContactsController> _logger;
         private readonly DotNetBrushUpDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ContactsController(ILogger<ContactsController> logger,DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public ContactsController(ILogger<ContactsController> logger,DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _dbContext = dbContext;
             _webHostEnvironment = webHostEnvironment;
+            this._userManager = userManager;
         }
 
         // GET: Contacts
         //[Route("Index")]
         public async Task<IActionResult> Index()
         {
-              return _dbContext.ContactsDataModel != null ? 
+            ViewData["UserID"] = _userManager.GetUserId(this.User);
+            var userId = _userManager.GetUserId(this.User);
+            return _dbContext.ContactsDataModel != null ? 
                           View(await _dbContext.ContactsDataModel.ToListAsync()) :
                           Problem("Entity set 'DotNetBrushUpDbContext.ContactsDataModel'  is null.");
         }

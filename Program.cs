@@ -25,29 +25,40 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireUppercase = false;
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "your_issuer", // Replace with your issuer
-            ValidAudience = "your_audience", // Replace with your audience
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9C90B77A7A924178B2D7D234E45068F1E308EF8F7436B39FFB1453802E45E65C")) // Replace with your secret key
-        };
-    });
+//builder.Services.AddAntiforgery(options =>
+//{
+//    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+//});
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            //ValidIssuer = "your_issuer", // Replace with your issuer
+//            ValidIssuer = @"""https://localhost:7207""", // Replace with your issuer
+//            //ValidAudience = "your_audience", // Replace with your audience
+//            ValidAudience = @"""https://localhost:7207""", // Replace with your audience
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9C90B77A7A924178B2D7D234E45068F1E308EF8F7436B39FFB1453802E45E65C")) // Replace with your secret key
+//        };
+//    });
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+}
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Add this line for authentication
+//app.UseAuthentication(); // Add this line for authentication
 app.UseAuthorization();
 
 app.MapControllers();

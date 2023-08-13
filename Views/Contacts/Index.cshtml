@@ -5,10 +5,11 @@
 }
 
 <h1>Contacts</h1><hr />
-
+@*<p>Is User Signed In: @User.Identity.IsAuthenticated</p>*@
 <p>
     <a asp-action="Create" class="btn btn1">Create New Contact</a>
 </p>
+@*<p>User ID : @ViewData["UserID"]</p>*@
 
 <table class="table">
     <thead>
