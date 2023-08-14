@@ -5,7 +5,6 @@
 }
 
 <h1>Contacts</h1><hr />
-@*<p>Is User Signed In: @User.Identity.IsAuthenticated</p>*@
 <p>
     <a asp-action="Create" class="btn btn1">Create New Contact</a>
 </p>
@@ -26,16 +25,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.ContactPhoneNo)
             </th>
-                <th>
-                    Actions
-                </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.ContactProofFilePath)
+            <th>
+                Proof File
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContactProofFileName)
-            </th>*@
-            <th></th>
+                Actions
+            </th>            
         </tr>
     </thead>
     
@@ -54,17 +49,22 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ContactPhoneNo)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.ContactProofFilePath)
-            </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.ContactProofFileName)
-            </td>*@
-                    <td style="text-align:center">
+                @if (!string.IsNullOrEmpty(item.ContactProofFileName))
+                {
+                    <a href="@Url.Action("DownloadProofFile", "Contacts", new { contactId = item.ContactId })" download>
+                        <img src="@Url.Content("~/icons/downloadicon.png")" alt="Download" title="Download Proof File" />
+                    </a>
+                }
+            </td>
+
+            <td style="text-align:center">
                 <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ContactId">Edit</a> |
                 <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ContactId">Details</a> |
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
             </td>
+
         </tr>
 }
     </tbody>

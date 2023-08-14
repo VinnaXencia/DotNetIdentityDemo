@@ -1,10 +1,12 @@
-﻿using DotNetBrushUp.Areas.Identity.Data;
+﻿using Azure.Storage.Blobs;
+using DotNetBrushUp.Areas.Identity.Data;
 using DotNetBrushUp.Data;
 using DotNetBrushUp.DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace DotNetBrushUp.Controllers
 {
@@ -17,13 +19,15 @@ namespace DotNetBrushUp.Controllers
         private readonly DotNetBrushUpDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public ContactsController(ILogger<ContactsController> logger,DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager)
+        public ContactsController(ILogger<ContactsController> logger,DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _logger = logger;
             _dbContext = dbContext;
             _webHostEnvironment = webHostEnvironment;
             this._userManager = userManager;
+            _configuration = configuration;
         }
 
         // GET: Contacts
@@ -63,29 +67,81 @@ namespace DotNetBrushUp.Controllers
             return View();
         }
 
+        //[HttpPost]
+        ////[Route("Contacts/AddContact")]
+        //public async Task<IActionResult> AddContact(ContactDataModel formData)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "ProofFiles");
+        //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + formData.ContactProofFile.FileName;
+        //        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        //        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await formData.ContactProofFile.CopyToAsync(fileStream);
+        //        }
+
+        //        formData.ContactProofFilePath = filePath;
+        //        formData.ContactProofFileName = uniqueFileName;
+
+        //    }
+        //    _dbContext.ContactsDataModel.Add(formData);
+        //    await _dbContext.SaveChangesAsync();
+        //    return RedirectToAction("Create", formData);
+        //}
+
         [HttpPost]
-        //[Route("Contacts/AddContact")]
         public async Task<IActionResult> AddContact(ContactDataModel formData)
         {
             if (ModelState.IsValid)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "ProofFiles");
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + formData.ContactProofFile.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                //string uniqueFileName = Guid.NewGuid().ToString() + "_" + formData.ContactProofFile.FileName;
+                string uniqueFileName = DateTime.Now.ToString("ddMMyyHHmmss") + "_" + formData.ContactProofFile.FileName;
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration.GetConnectionString("AzureBlobStorageConnection"));
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient("contactsproof");
+
+                BlobClient blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                using (var stream = formData.ContactProofFile.OpenReadStream())
                 {
-                    await formData.ContactProofFile.CopyToAsync(fileStream);
+                    await blobClient.UploadAsync(stream, true);
                 }
 
-                formData.ContactProofFilePath = filePath;
+                formData.ContactProofFilePath = blobClient.Uri.ToString();
                 formData.ContactProofFileName = uniqueFileName;
-
             }
+
             _dbContext.ContactsDataModel.Add(formData);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Create", formData);
         }
+
+        public async Task<IActionResult> DownloadProofFile(int contactId)
+        {
+            var contact = await _dbContext.ContactsDataModel.FindAsync(contactId);
+            if (contact == null || string.IsNullOrEmpty(contact.ContactProofFileName))
+            {
+                return NotFound();
+            }
+
+            // Create a BlobServiceClient using your connection string
+            BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration.GetConnectionString("AzureBlobStorageConnection"));
+
+            // Get a reference to the blob container
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient("contactsproof");
+
+            // Get a reference to the blob
+            BlobClient blobClient = containerClient.GetBlobClient(contact.ContactProofFileName);
+
+            // Get the blob's content as a stream
+            var blobStream = await blobClient.OpenReadAsync();
+
+            // Return the blob's content as a FileResult
+            return File(blobStream, "application/octet-stream", contact.ContactProofFileName);
+        }
+
 
 
         // POST: Contacts/Create

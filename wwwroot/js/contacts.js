@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿
+//Add New Contact
+$(document).ready(function () {
     $("#btn-submit").click(function () {
         var formData = new FormData();
         formData.append("ContactName", $("#contactName").val());
@@ -10,7 +12,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Contacts/AddContact", // Update with the correct URL
+            url: "/Contacts/AddContact", 
             data: formData,
             contentType: false, // Set to false for FormData
             processData: false, // Set to false for FormData
