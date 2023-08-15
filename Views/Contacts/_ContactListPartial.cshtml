@@ -1,0 +1,25 @@
+﻿@model List<DotNetBrushUp.DataModels.ContactDataModel>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.ContactName)</td>
+        <td>@Html.DisplayFor(modelItem => item.ContactEmail)</td>
+        <td>@Html.DisplayFor(modelItem => item.ContactAddress)</td>
+        <td>@Html.DisplayFor(modelItem => item.ContactPhoneNo)</td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.ContactProofFileName))
+            {
+                <a href="@Url.Action("DownloadProofFile", "Contacts", new { contactId = item.ContactId })" download>
+                    <img style="width:25px; height:25px" src="@Url.Content("~/icons/downloadicon.png")" alt="Download" title="Download Proof File" />
+                </a>
+            }
+        </td>
+
+        <td style="text-align:center">
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.ContactId">Edit</a> |
+            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ContactId">Details</a> |
+            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ContactId">Delete</a>
+        </td>
+    </tr>
+}

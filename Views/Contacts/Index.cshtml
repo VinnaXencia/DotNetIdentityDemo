@@ -6,11 +6,12 @@
 
 <h1 style="color:white">Contacts</h1><hr />
 <p>
-    <a asp-action="Create" class="btn btn1">Create New Contact</a>
+    <a asp-action="Create" class="btn btn1">Create New Contact</a> | <label style="color:black"><b>Search : </b></label> <input type="text" id="searchInput" placeholder="Search by Name or Phone No">
 </p>
 @*<p>User ID : @ViewData["UserID"]</p>*@
 
-<table class="table">
+
+<table id="contactTable" class="table">
     <thead>
         <tr>
             <th>

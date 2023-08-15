@@ -66,31 +66,8 @@ namespace DotNetBrushUp.Controllers
         {
             return View();
         }
-
-        //[HttpPost]
-        ////[Route("Contacts/AddContact")]
-        //public async Task<IActionResult> AddContact(ContactDataModel formData)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "ProofFiles");
-        //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + formData.ContactProofFile.FileName;
-        //        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        //        using (var fileStream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await formData.ContactProofFile.CopyToAsync(fileStream);
-        //        }
-
-        //        formData.ContactProofFilePath = filePath;
-        //        formData.ContactProofFileName = uniqueFileName;
-
-        //    }
-        //    _dbContext.ContactsDataModel.Add(formData);
-        //    await _dbContext.SaveChangesAsync();
-        //    return RedirectToAction("Create", formData);
-        //}
-
+      
+        //Add New Contact
         [HttpPost]
         public async Task<IActionResult> AddContact(ContactDataModel formData)
         {
@@ -140,8 +117,7 @@ namespace DotNetBrushUp.Controllers
 
             // Return the blob's content as a FileResult
             return File(blobStream, "application/octet-stream", contact.ContactProofFileName);
-        }
-
+        }        
 
 
         // POST: Contacts/Create
@@ -184,21 +160,9 @@ namespace DotNetBrushUp.Controllers
         //public async Task<IActionResult> Edit(int id, [Bind("ContactId,ContactName,ContactEmail,ContactAddress,ContactPhoneNo,ContactProofFilePath,ContactProofFileName")] ContactDataModel contactDataModel)
         public async Task<IActionResult> UpdateContact(ContactDataModel formData)
         {
-            if (ModelState.IsValid)
-            {
-                //string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "ProofFiles");
-                //string uniqueFileName = Guid.NewGuid().ToString() + "_" + formData.ContactProofFile.FileName;
-                //string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                //using (var fileStream = new FileStream(filePath, FileMode.Create))
-                //{
-                //    await formData.ContactProofFile.CopyToAsync(fileStream);
-                //}
-
-                //formData.ContactProofFilePath = filePath;
-               // formData.ContactProofFileName = uniqueFileName;
-
-            }
+            //if (ModelState.IsValid)
+            //{
+            //}
             var contactToUpdate = await _dbContext.ContactsDataModel.FindAsync(formData.ContactId);
 
             if (contactToUpdate == null)
@@ -214,6 +178,28 @@ namespace DotNetBrushUp.Controllers
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Edit", new { id = formData.ContactId });
         }
+
+        //Live Search Functionality
+        [HttpGet]
+        public async Task<IActionResult> SearchContacts(string searchText)
+        {
+            var userId = _userManager.GetUserId(this.User);
+
+            if (string.IsNullOrEmpty(searchText))
+            {
+                var contacts = await _dbContext.ContactsDataModel.ToListAsync();
+                return PartialView("_ContactListPartial", contacts);
+            }
+
+            var filteredContacts = await _dbContext.ContactsDataModel
+                .Where(contact =>
+                    contact.ContactName.Contains(searchText) || // Search by Name
+                    contact.ContactPhoneNo.Contains(searchText)) // Search by Phone No
+                .ToListAsync();
+
+            return PartialView("_ContactListPartial", filteredContacts); // Create a partial view to render the contacts list
+        }
+
 
         // GET: Contacts/Delete/5
         public async Task<IActionResult> Delete(int? id)

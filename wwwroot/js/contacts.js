@@ -1,6 +1,8 @@
 ﻿
-//Add New Contact
+
 $(document).ready(function () {
+
+    //Add New Contact
     $("#btn-submit").click(function () {
         var formData = new FormData();
         formData.append("ContactName", $("#contactName").val());
@@ -61,4 +63,27 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    // Live Search Functionality
+
+    $("#searchInput").on("keyup", function () {
+        var searchText = $(this).val();
+        $.ajax({
+            type: "GET",
+            url: "/Contacts/SearchContacts", // Add a new action method for searching
+            data: { searchText: searchText },
+            success: function (data) {
+                // Update the table content with filtered contacts
+                $("#contactTable tbody").html(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error searching contacts: " + errorThrown);
+                // Handle error if needed
+            }
+        });
+    });
+
+    
+
 });
