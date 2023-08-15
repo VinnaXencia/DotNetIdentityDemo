@@ -2,24 +2,24 @@
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row justify-content-center">
+<div class="row justify-content-center" >
     <div class="col-5 mt-5">
-        <div class="card login-logout-card">
+        <div class="card login-logout-card" style="box-shadow:10px 10px 5px black">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
                         <a class="nav-link" href="/Identity/Account/Login">
-                            Log In
+                            <b>Log In</b>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/Identity/Account/Register">
-                            Register
+                            <b>Register</b>
                         </a>
                     </li>
                 </ul>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="background-image:url(https://img.freepik.com/free-photo/gadgets-office-supplies_144627-38082.jpg?w=2000);background-size: cover;">
                 <div class="row justify-content-center">
                     <div class="col-10 my-4">
                         @RenderBody()

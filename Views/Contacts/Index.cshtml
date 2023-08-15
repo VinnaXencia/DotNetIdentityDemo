@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Contacts</h1><hr />
+<h1 style="color:white">Contacts</h1><hr />
 <p>
     <a asp-action="Create" class="btn btn1">Create New Contact</a>
 </p>
@@ -14,16 +14,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ContactName)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContactEmail)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContactAddress)
+                Address
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ContactPhoneNo)
+                PhoneNo
             </th>
             <th>
                 Proof File
@@ -54,7 +54,7 @@
                 @if (!string.IsNullOrEmpty(item.ContactProofFileName))
                 {
                     <a href="@Url.Action("DownloadProofFile", "Contacts", new { contactId = item.ContactId })" download>
-                        <img src="@Url.Content("~/icons/downloadicon.png")" alt="Download" title="Download Proof File" />
+                        <img style="width:25px; height:25px" src="@Url.Content("~/icons/downloadicon.png")" alt="Download" title="Download Proof File" />
                     </a>
                 }
             </td>

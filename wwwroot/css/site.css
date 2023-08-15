@@ -92,6 +92,17 @@ center{
     margin-left:500px;
 }
 
+/* For the Login Tab when Active */
+.nav-tabs .nav-item .nav-link.active[href*="/Login"] {
+    background-color: gray; /* Change to your desired color */
+    color: white; /* Change text color for visibility */
+}
+
+/* For the Register Tab when Active */
+.nav-tabs .nav-item .nav-link.active[href*="/Register"] {
+    background-color: gray; /* Change to your desired color */
+    color: white; /* Change text color for visibility */
+}
 
 
 
