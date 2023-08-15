@@ -53,9 +53,9 @@ body {
     font-style:oblique;
 }
 
-    .btn.btn1:hover {
-        background-color: deepskyblue;
-    }
+.btn.btn1:hover {
+    background-color: deepskyblue;
+}
 
 tbody{
     background: url(https://st2.depositphotos.com/3922387/8342/i/450/depositphotos_83428804-stock-photo-abstract-pastel-sky-blurred-background.jpg);
@@ -75,6 +75,7 @@ thead{
     color:brown;
     font-weight:bold;
     font-style:normal;
+    text-align:center;
 }
 
 th,tr{
@@ -104,6 +105,11 @@ center{
     color: white; /* Change text color for visibility */
 }
 
+.form-group{
+    margin-top:10px;
+    color:white;
+    font-weight:bold;
+}
 
 
 
