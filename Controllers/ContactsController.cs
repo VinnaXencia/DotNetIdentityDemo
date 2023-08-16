@@ -21,7 +21,7 @@ namespace DotNetBrushUp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public ContactsController(ILogger<ContactsController> logger,DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public ContactsController(ILogger<ContactsController> logger, DotNetBrushUpDbContext dbContext, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -36,7 +36,7 @@ namespace DotNetBrushUp.Controllers
         {
             ViewData["UserID"] = _userManager.GetUserId(this.User);
             var userId = _userManager.GetUserId(this.User);
-            return _dbContext.ContactsDataModel != null ? 
+            return _dbContext.ContactsDataModel != null ?
                           View(await _dbContext.ContactsDataModel.ToListAsync()) :
                           Problem("Entity set 'DotNetBrushUpDbContext.ContactsDataModel'  is null.");
         }
@@ -55,6 +55,12 @@ namespace DotNetBrushUp.Controllers
             {
                 return NotFound();
             }
+            //Removing the prefix upto where the Underscore is present
+            if (contactDataModel.ContactProofFileName != null)
+            {
+                int underscoreIndex = contactDataModel.ContactProofFileName.IndexOf('_');
+                contactDataModel.ContactProofFileName = contactDataModel.ContactProofFileName.Substring(underscoreIndex + 1);
+            }
 
             return View(contactDataModel);
         }
@@ -66,7 +72,7 @@ namespace DotNetBrushUp.Controllers
         {
             return View();
         }
-      
+
         //Add New Contact
         [HttpPost]
         public async Task<IActionResult> AddContact(ContactDataModel formData)
@@ -92,7 +98,47 @@ namespace DotNetBrushUp.Controllers
 
             _dbContext.ContactsDataModel.Add(formData);
             await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Create", formData);
+            //return RedirectToAction("Create", formData);
+            return RedirectToAction("Index");
+        }
+
+        //Update Existing Contact
+        
+        public async Task<IActionResult> UpdateContact(ContactDataModel formData)
+        {
+            //var contactToUpdate = await _dbContext.ContactsDataModel.FindAsync(formData.ContactId);
+            var proofFile = formData.ContactProofFile;
+
+            var contactToUpdate = _dbContext.ContactsDataModel.SingleOrDefault(c => c.ContactId == formData.ContactId);
+
+            if (formData.ContactProofFile != null)
+            {
+                string uniqueFileName = DateTime.Now.ToString("ddMMyyHHmmss") + "_" + formData.ContactProofFile.FileName;
+
+                BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration.GetConnectionString("AzureBlobStorageConnection"));
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient("contactsproof");
+
+                BlobClient blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                using (var stream = formData.ContactProofFile.OpenReadStream())
+                {
+                    await blobClient.UploadAsync(stream, true);
+                }
+                formData.ContactProofFilePath = blobClient.Uri.ToString();
+                formData.ContactProofFileName = uniqueFileName;
+                contactToUpdate.ContactProofFilePath = formData.ContactProofFilePath;
+                contactToUpdate.ContactProofFileName = formData.ContactProofFileName;
+            }                          
+
+            contactToUpdate.ContactName = formData.ContactName;
+            contactToUpdate.ContactEmail = formData.ContactEmail;
+            contactToUpdate.ContactAddress = formData.ContactAddress;
+            contactToUpdate.ContactPhoneNo = formData.ContactPhoneNo;            
+            _dbContext.Entry(contactToUpdate).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Edit", new { id = formData.ContactId });
+            //return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DownloadProofFile(int contactId)
@@ -115,9 +161,16 @@ namespace DotNetBrushUp.Controllers
             // Get the blob's content as a stream
             var blobStream = await blobClient.OpenReadAsync();
 
+            //Removing the prefix upto where the Underscore is present
+            if (contact.ContactProofFileName != null)
+            {
+                int underscoreIndex = contact.ContactProofFileName.IndexOf('_');
+                contact.ContactProofFileName = contact.ContactProofFileName.Substring(underscoreIndex + 1);
+            }
+
             // Return the blob's content as a FileResult
             return File(blobStream, "application/octet-stream", contact.ContactProofFileName);
-        }        
+        }
 
 
         // POST: Contacts/Create
@@ -149,35 +202,17 @@ namespace DotNetBrushUp.Controllers
             {
                 return NotFound();
             }
+            //Removing the prefix upto where the Underscore is present
+            if (contactDataModel.ContactProofFileName != null)
+            {
+                int underscoreIndex = contactDataModel.ContactProofFileName.IndexOf('_');
+                contactDataModel.ContactProofFileName = contactDataModel.ContactProofFileName.Substring(underscoreIndex + 1);
+            }
+
             return View(contactDataModel);
         }
 
-        // POST: Contacts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("ContactId,ContactName,ContactEmail,ContactAddress,ContactPhoneNo,ContactProofFilePath,ContactProofFileName")] ContactDataModel contactDataModel)
-        public async Task<IActionResult> UpdateContact(ContactDataModel formData)
-        {
-            //if (ModelState.IsValid)
-            //{
-            //}
-            var contactToUpdate = await _dbContext.ContactsDataModel.FindAsync(formData.ContactId);
-
-            if (contactToUpdate == null)
-            {
-                return NotFound(); // Handle the case when the contact is not found
-            }
-
-            contactToUpdate.ContactName = formData.ContactName;
-            contactToUpdate.ContactEmail = formData.ContactEmail;
-            contactToUpdate.ContactAddress = formData.ContactAddress;
-            contactToUpdate.ContactPhoneNo = formData.ContactPhoneNo;
-            _dbContext.Entry(contactToUpdate).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Edit", new { id = formData.ContactId });
-        }
+        
 
         //Live Search Functionality
         [HttpGet]
@@ -233,14 +268,14 @@ namespace DotNetBrushUp.Controllers
             {
                 _dbContext.ContactsDataModel.Remove(contactDataModel);
             }
-            
+
             await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ContactDataModelExists(int id)
         {
-          return (_dbContext.ContactsDataModel?.Any(e => e.ContactId == id)).GetValueOrDefault();
+            return (_dbContext.ContactsDataModel?.Any(e => e.ContactId == id)).GetValueOrDefault();
         }
     }
 }

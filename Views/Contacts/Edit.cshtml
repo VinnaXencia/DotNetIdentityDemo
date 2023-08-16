@@ -1,7 +1,5 @@
 ﻿@model DotNetBrushUp.DataModels.ContactDataModel
 
-
-@*<div class="container1">*@
     @{
         ViewData["Title"] = "Edit";
     }
@@ -11,45 +9,46 @@
     <div class="row">
         <div style="display: flex;justify-content: center; align-items: center;">
         <div class="col-md-4">
-            @*<form asp-action="Edit">*@
-            <form asp-action="UpdateContact">
+            
+            <form asp-action="UpdateContact" id="updateContactForm" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="ContactId" />
-                <div class="form-group" >
-                    <label asp-for="ContactName" class="control-label"><b>Contact Name</b></label>
-                    <input asp-for="ContactName" class="form-control" />
-                    <span asp-validation-for="ContactName" class="text-danger"></span>
+                <input type="hidden" asp-for="ContactId" id="upContactId"/>
+                <div class="form-group">
+                    <label asp-for="ContactName" class="control-label">Contact Name</label>
+                    <input asp-for="ContactName" class="form-control" id="upContactName" />
+                    <span asp-validation-for="ContactName" class="text-danger" id="spnContactName"></span>
                 </div>
-                <div class="form-group" >
-                    <label asp-for="ContactEmail" class="control-label"><b>Contact Email</b></label>
-                    <input asp-for="ContactEmail" class="form-control" />
-                    <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="ContactEmail" class="control-label">Contact Email</label>
+                    <input asp-for="ContactEmail" class="form-control" id="upContactEmail" />
+                    <span asp-validation-for="ContactEmail" class="text-danger" id="spnContactEmail"></span>
                 </div>
-                <div class="form-group" >
-                    <label asp-for="ContactAddress" class="control-label"><b>Contact Address</b></label>
-                    <input asp-for="ContactAddress" class="form-control" />
-                    <span asp-validation-for="ContactAddress" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="ContactAddress" class="control-label">Contact Address</label>
+                    <input asp-for="ContactAddress" class="form-control" id="upContactAddress" />
+                    <span asp-validation-for="ContactAddress" class="text-danger" id="spnContactAddress"></span>
                 </div>
-                <div class="form-group" >
-                    <label asp-for="ContactPhoneNo" class="control-label"><b>Contact PhoneNo</b></label>
-                    <input asp-for="ContactPhoneNo" class="form-control" />
-                    <span asp-validation-for="ContactPhoneNo" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="ContactPhoneNo" class="control-label">Contact PhoneNo</label>
+                    <input asp-for="ContactPhoneNo" class="form-control" id="upContactPhoneNo" />
+                    <span asp-validation-for="ContactPhoneNo" class="text-danger" id="spnContactPhoneNo"></span>
                 </div>
-                @*<div class="form-group">
-                <label asp-for="ContactProofFileName" class="control-label"></label>
-                <input asp-for="ContactProofFileName" class="form-control" />
-                <span asp-validation-for="ContactProofFileName" class="text-danger"></span>
-                </div>*@
+                <div class="form-group">
+                    <label asp-for="ContactProofFile" class="control-label">Contact ProofFile</label>
+                    <input asp-for="ContactProofFile" name="ContactProofFile" type="file" class="btn btn-primary form-control" id="editContactProofFile" data-existing-filename="@Model.ContactProofFileName" />
+                    <span  class="text-danger"></span>
+                    <div>
+                        Existing File: <span id="ExistingFileNameSpan">@Model.ContactProofFileName</span>
+                    </div>
+                </div>                
+
                 <div class="form-group" style="margin-top:10px">
-                    <input type="submit" id="btn-update" value="Save" class="btn btn-primary" /><a style="margin-left:20px" asp-action="Index">Back to List</a>
+                    <input type="submit" id="btn-update" value="Update" class="btn btn-primary" /><a style="margin-left:20px" asp-action="Index">Back to List</a>
                 </div>
             </form>
         </div>
     </div>
     </div>
-
-@*</div>*@
-
 
 @section Scripts {
     @{
